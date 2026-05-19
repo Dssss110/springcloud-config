@@ -1,0 +1,51 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: yue0shop-web
+  boot:
+    admin:
+      client:
+        url: http://localhost:7779
+        enabled: true
+        auto-registration: true
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+  packages-to-scan: com.yue0.controller  # 只扫描你的接口，关闭默认示例
+  default-produces-media-type: application/json
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8888/eureka
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+
+# 修改Ribbon的负载均衡算法
+yue0shop-user:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+feign:
+  circuitbreaker:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
